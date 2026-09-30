@@ -114,7 +114,7 @@ function ensure(l){
   if(STR[l]) return Promise.resolve();
   return fetch("locales/"+l+".json").then(function(r){ return r.json(); }).then(function(j){ STR[l]=j; });
 }
-var LANGS = {sn:"chiShona", en:"English"};
+var LANGS = {sn:"chiShona", nd:"isiNdebele", to:"chiTonga", ny:"Chichewa", en:"English"};
 var lang = "sn";
 try { lang = localStorage.getItem("lang") || "sn"; } catch(e){}
 if(!LANGS[lang]) lang = "sn";
