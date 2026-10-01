@@ -1,8 +1,8 @@
 /* AfroPDF service worker: makes the app open with no internet after the first visit.
    When you change any file, bump VERSION so phones fetch the new copy. */
-var VERSION = "afropdf-v7";
+var VERSION = "afropdf-v8";
 var APP = ["./", "index.html", "manifest.webmanifest", "locales/en.json", "locales/sn.json", "locales/nd.json", "locales/to.json", "locales/ny.json",
-           "icons/icon-192.png", "icons/icon-512.png", "icons/icon-180.png"];
+           "icons/icon-192.png", "icons/icon-512.png", "icons/icon-180.png", "icons/logo.png"];
 var LIBS = ["https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js",
             "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js"];
 
