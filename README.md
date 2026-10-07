@@ -1,6 +1,6 @@
 # AfroPDF
 
-Free PDF reader. Works offline after the first visit.
+Free PDF reader with a Shona interface. Works offline after the first visit.
 
 Developed by Last Dulani.
 
@@ -26,6 +26,10 @@ Developed by Last Dulani.
 ## Updating the app later
 Change the files in GitHub, then in `sw.js` change `afropdf-v1` to `afropdf-v2` (and so on).
 Phones pick up the new version the next time they open the app online, usually on the second open.
+
+## Languages included
+Shona (sn), Ndebele (nd), Tonga (to), Chichewa/Nyanja (ny), English (en) as fallback.
+Translations were drafted and need review by native speakers.
 
 ## Adding a language
 1. Copy `locales/en.json` to `locales/xx.json` and translate the values (not the keys).
