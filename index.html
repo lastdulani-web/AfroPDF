@@ -11,9 +11,9 @@
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <style>
-:root{--bg:#fbf7ef;--fg:#1f2a1f;--card:#fff;--ac:#1e7a3c;--ac2:#f2b705;--bd:#d9d2c1;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141a14;--fg:#eef2ea;--card:#1d261d;--ac:#4cc27a;--bd:#33402f}}
-:root[data-theme="dark"]{--bg:#141a14;--fg:#eef2ea;--card:#1d261d;--ac:#4cc27a;--bd:#33402f}
+:root{--bg:#fbf7ef;--fg:#1f2a1f;--card:#fff;--ac:#145c30;--ac2:#f2b705;--bd:#d9d2c1;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141a14;--fg:#eef2ea;--card:#1d261d;--ac:#2f9e5c;--bd:#33402f}}
+:root[data-theme="dark"]{--bg:#141a14;--fg:#eef2ea;--card:#1d261d;--ac:#2f9e5c;--bd:#33402f}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column}
@@ -67,6 +67,7 @@ main{flex:1;overflow:auto;padding:12px;text-align:center;position:relative;touch
 #splash{position:fixed;inset:0;background:var(--ac);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:50;transition:opacity .4s ease}
 #splash img{width:84px;height:84px;border-radius:18px;background:#fff;object-fit:contain;padding:6px}
 #splash span{color:#fff;font-size:1.05rem;font-weight:600;letter-spacing:.3px}
+#splash small{color:#ffffffcc;font-size:.75rem;margin-top:-8px}
 #splash.hide{opacity:0;pointer-events:none}
 @page{margin:8mm}
 @media print{
@@ -79,10 +80,10 @@ main{flex:1;overflow:auto;padding:12px;text-align:center;position:relative;touch
 </style>
 </head>
 <body>
-<div id="splash"><img src="icons/logo.png" alt="AfroPDF"><span data-i="appName"></span></div>
+<div id="splash"><img src="icons/logo.png" alt="AfroPDF"><span data-i="appName"></span><small data-i="developedBy"></small></div>
 <header>
   <img class="lg" id="lg" src="icons/logo.png" width="30" height="30" alt="AfroPDF">
-  <h1 id="title" data-i="appName"></h1>
+  <h1 id="title"><span style="color:#fff">Afro</span><span style="color:var(--ac2)">PDF</span></h1>
   <select id="lang" aria-label="Language"></select>
   <button id="theme" aria-label="Light / Dark" title="Light / Dark"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="display:block"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
 </header>
