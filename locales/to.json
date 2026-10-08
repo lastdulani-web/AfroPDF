@@ -26,5 +26,8 @@
   "printMax": "Kusika mapeji {n} aciindi comwe.",
   "cancel": "Leka",
   "preparing": "Kulibambila...",
-  "printFail": "Tetwakonzya kuprinita."
+  "printFail": "Tetwakonzya kuprinita.",
+  "share": "Abane",
+  "shareUnsupported": "Kwaabana takulibonwi aano. Faela lyabikkwa muchibeela caco.",
+  "developedBy": "Yakabambwa a Last Dulani"
 }

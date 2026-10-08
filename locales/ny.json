@@ -2,7 +2,7 @@
   "appName": "AfroPDF",
   "language": "Chilankhulo",
   "theme": "Kuwala / Mdima",
-  "welcome": "Takulandirani",
+  "welcome": "Tilandire",
   "tagline": "Werengani ma-PDF anu kwaulere.",
   "open": "Tsegulani PDF",
   "openAnother": "Tsegulani inanso",
@@ -26,5 +26,8 @@
   "printMax": "Mpaka masamba {n} nthawi imodzi.",
   "cancel": "Lekani",
   "preparing": "Kukonzekera...",
-  "printFail": "Sitinathe kusindikiza."
+  "printFail": "Sitinathe kusindikiza.",
+  "share": "Gawirani",
+  "shareUnsupported": "Kugawana sikugwira ntchito pano. Fayilo yatsitsidwa m'malo mwake.",
+  "developedBy": "Idapangidwa ndi Last Dulani"
 }

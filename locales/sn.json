@@ -26,5 +26,8 @@
   "printMax": "Kusvika mapeji {n} panguva imwe.",
   "cancel": "Regedza",
   "preparing": "Kugadzirira...",
-  "printFail": "Hatina kukwanisa kuprinta."
+  "printFail": "Hatina kukwanisa kuprinta.",
+  "share": "Govera",
+  "shareUnsupported": "Kugoverana hakushande pano. Faira rapakurwa pachinzvimbo.",
+  "developedBy": "Yakagadzirwa na Last Dulani"
 }

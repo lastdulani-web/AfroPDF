@@ -26,5 +26,8 @@
   "printMax": "Kuze kube ngamakhasi angu-{n} ngesikhathi esisodwa.",
   "cancel": "Khansela",
   "preparing": "Iyalungiselela...",
-  "printFail": "Asikwazanga ukuphrinta."
+  "printFail": "Asikwazanga ukuphrinta.",
+  "share": "Yabelana",
+  "shareUnsupported": "Ukwabelana akusebenzi lapha. Ifayela lilandiwe esikhundleni.",
+  "developedBy": "Yenziwe ngu Last Dulani"
 }
