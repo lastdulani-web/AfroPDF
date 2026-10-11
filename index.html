@@ -27,7 +27,8 @@ button,select,input{font:inherit;font-size:.8rem;color:var(--fg);background:var(
 button.p{background:var(--ac);color:#fff;border-color:var(--ac);font-weight:600;font-size:.9rem}
 button:disabled{opacity:.4}
 #bar{display:none;gap:4px;padding:6px 8px;align-items:center;overflow-x:auto;border-bottom:1px solid var(--bd);background:var(--card)}
-#bar button{flex:none;min-width:38px;height:38px;border:0;border-radius:8px;background:none;color:var(--fg);display:grid;place-items:center;padding:0}
+#bar button{flex:none;border:0;border-radius:8px;background:none;color:var(--fg);padding:6px 10px;white-space:nowrap}
+#bar button.icon{min-width:38px;height:38px;display:grid;place-items:center;padding:0}
 #bar button:active{background:var(--ac2);color:#1f2a1f}
 .pgbox{flex:none;display:inline-flex;align-items:center;border:1px solid var(--bd);border-radius:8px;background:var(--card);padding:0 8px;min-height:36px;font-size:.8rem;cursor:text}
 .pgbox:focus-within{border-color:var(--ac)}
@@ -86,17 +87,17 @@ main{flex:1;overflow:auto;padding:12px;text-align:center;position:relative;touch
   <img class="lg" id="lg" src="icons/logo.png" width="30" height="30" alt="AfroPDF">
   <h1 id="title"><span style="color:#fff">Afro</span><span style="color:var(--ac2)">PDF</span></h1>
   <select id="lang" aria-label="Language"></select>
-  <button id="theme" aria-label="Light / Dark" title="Light / Dark"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="display:block"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
+  <button id="theme" data-i="theme"></button>
 </header>
 <div id="bar">
-  <button id="open2" aria-label="Open another" title="Open another"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19V6a1 1 0 0 1 1-1h5l2 2h7a1 1 0 0 1 1 1v3"/><path d="M3 19l3-8h16l-3 8z"/></svg></button>
-  <button id="prev" data-i="prev" aria-label="Go back" title="Go back"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <button id="open2" class="icon" aria-label="Open another" title="Open another"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19V6a1 1 0 0 1 1-1h5l2 2h7a1 1 0 0 1 1 1v3"/><path d="M3 19l3-8h16l-3 8z"/></svg></button>
+  <button id="prev" data-i="prev"></button>
   <label class="pgbox"><input id="pg" type="number" min="1" aria-label="Page"><span id="tot"></span></label>
-  <button id="next" data-i="next" aria-label="Go forward" title="Go forward"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
-  <button id="zo" data-i="zoomOut" aria-label="Zoom out" title="Zoom out"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M8 11h6"/></svg></button>
-  <button id="zi" data-i="zoomIn" aria-label="Zoom in" title="Zoom in"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg></button>
-  <button id="print" aria-label="Print" title="Print"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V3h10v6"/><path d="M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7" rx="1"/></svg></button>
-  <button id="share" aria-label="Share" title="Share"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="M8 8l4-4 4 4"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg></button>
+  <button id="next" data-i="next"></button>
+  <button id="zo" data-i="zoomOut"></button>
+  <button id="zi" data-i="zoomIn"></button>
+  <button id="print" class="icon" aria-label="Print" title="Print"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V3h10v6"/><path d="M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7" rx="1"/></svg></button>
+  <button id="share" class="icon" aria-label="Share" title="Share"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="M8 8l4-4 4 4"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg></button>
 </div>
 <main id="main">
   <div id="welcome">
