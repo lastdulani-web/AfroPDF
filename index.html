@@ -376,21 +376,35 @@ function toast(msg){
   document.body.appendChild(el);
   setTimeout(function(){ el.remove(); }, 3500);
 }
-function shareCurrent(){
-  if(!curBlob) return;
-  var f=null;
-  try{ f=new File([curBlob], curName||"document.pdf", {type:"application/pdf"}); }catch(e){}
-  if(f && navigator.canShare && navigator.canShare({files:[f]})){
-    navigator.share({files:[f], title:curName}).catch(function(){});
-    return;
-  }
+function fallbackShare(){
   try{
     var url=URL.createObjectURL(curBlob);
-    var a=document.createElement("a"); a.href=url; a.download=curName||"document.pdf";
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    setTimeout(function(){ URL.revokeObjectURL(url); },4000);
+    var isIOS=/iP(hone|ad|od)/.test(navigator.userAgent||"");
+    if(isIOS){
+      /* Safari ignores the download attribute; opening the PDF lets the student use Safari's own share icon */
+      window.open(url,"_blank");
+    }else{
+      var a=document.createElement("a"); a.href=url; a.download=curName||"document.pdf";
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    }
+    setTimeout(function(){ URL.revokeObjectURL(url); },30000);
   }catch(e){}
   toast(t("shareUnsupported"));
+}
+function shareCurrent(){
+  if(!curBlob) return;
+  try{
+    var f=null;
+    try{ f=new File([curBlob], curName||"document.pdf", {type:"application/pdf"}); }catch(e){}
+    if(f && navigator.canShare && navigator.canShare({files:[f]})){
+      navigator.share({files:[f], title:curName}).catch(function(err){
+        if(err && err.name==="AbortError") return; /* student cancelled on purpose */
+        fallbackShare();
+      });
+      return;
+    }
+    fallbackShare();
+  }catch(e){ fallbackShare(); }
 }
 $("share").onclick=shareCurrent;
 document.addEventListener("keydown",function(e){
