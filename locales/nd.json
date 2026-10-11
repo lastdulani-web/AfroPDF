@@ -29,5 +29,8 @@
   "printFail": "Asikwazanga ukuphrinta.",
   "share": "Yabelana",
   "shareUnsupported": "Ukwabelana akusebenzi lapha. Ifayela lilandiwe esikhundleni.",
-  "developedBy": "Yenziwe ngu Last Dulani"
+  "developedBy": "Yenziwe ngu Last Dulani",
+  "search": "Dinga",
+  "searching": "Kudinga...",
+  "noMatch": "Akutholakalanga lutho."
 }

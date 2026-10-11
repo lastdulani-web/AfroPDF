@@ -29,5 +29,8 @@
   "printFail": "Sitinathe kusindikiza.",
   "share": "Gawirani",
   "shareUnsupported": "Kugawana sikugwira ntchito pano. Fayilo yatsitsidwa m'malo mwake.",
-  "developedBy": "Idapangidwa ndi Last Dulani"
+  "developedBy": "Idapangidwa ndi Last Dulani",
+  "search": "Sakani",
+  "searching": "Kusaka...",
+  "noMatch": "Palibe zomwe zapezeka."
 }

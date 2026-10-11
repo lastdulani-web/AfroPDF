@@ -29,5 +29,8 @@
   "printFail": "Tetwakonzya kuprinita.",
   "share": "Abane",
   "shareUnsupported": "Kwaabana takulibonwi aano. Faela lyabikkwa muchibeela caco.",
-  "developedBy": "Yakapangwa a Last Dulani"
+  "developedBy": "Yakapangwa a Last Dulani",
+  "search": "Lyangula",
+  "searching": "Kulilangula...",
+  "noMatch": "Taakwe cakajanika."
 }

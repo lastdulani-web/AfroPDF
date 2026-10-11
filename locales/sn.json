@@ -29,5 +29,8 @@
   "printFail": "Hatina kukwanisa kuprinta.",
   "share": "Govera",
   "shareUnsupported": "Kugoverana hakushande pano. Faira rapakurwa pachinzvimbo.",
-  "developedBy": "Yakagadzirwa na Last Dulani"
+  "developedBy": "Yakagadzirwa na Last Dulani",
+  "search": "Tsvaga",
+  "searching": "Kutsvaga...",
+  "noMatch": "Hapana chawanikwa."
 }

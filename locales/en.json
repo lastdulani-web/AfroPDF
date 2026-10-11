@@ -29,5 +29,8 @@
   "printFail": "Could not print.",
   "share": "Share",
   "shareUnsupported": "Sharing isn't supported here. The file was downloaded instead.",
-  "developedBy": "Developed by Last Dulani"
+  "developedBy": "Developed by Last Dulani",
+  "search": "Search",
+  "searching": "Searching...",
+  "noMatch": "No matches found."
 }
