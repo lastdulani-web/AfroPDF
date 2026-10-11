@@ -78,6 +78,15 @@ main{flex:1;overflow:auto;padding:12px;text-align:center;position:relative;touch
  #printArea{display:block}
  #printArea img{display:block;margin:0 auto;max-width:100%;max-height:270mm;break-after:page;page-break-after:always}
 }
+#sbar{display:none;gap:6px;align-items:center;padding:6px 8px;border-bottom:1px solid var(--bd);background:var(--card)}
+#sbar.on{display:flex}
+#sbar input{flex:1;min-width:0}
+#sbar button{flex:none;border:0;background:none;color:var(--fg);width:32px;height:32px;display:grid;place-items:center;border-radius:8px;padding:0}
+#sbar button:active{background:var(--ac2);color:#1f2a1f}
+#sclose{font-size:20px}
+#smsg{font-size:.75rem;opacity:.75;white-space:nowrap}
+.hlmark{position:absolute;background:rgba(242,183,5,.45);pointer-events:auto;cursor:pointer;border-radius:2px}
+#hlbtn{position:fixed;z-index:25;border:0;border-radius:8px;background:var(--fg);color:var(--bg);width:34px;height:34px;display:grid;place-items:center;box-shadow:0 2px 8px #0004}
 .err{color:#c0392b}
 </style>
 </head>
@@ -96,8 +105,16 @@ main{flex:1;overflow:auto;padding:12px;text-align:center;position:relative;touch
   <button id="next" data-i="next"></button>
   <button id="zo" data-i="zoomOut"></button>
   <button id="zi" data-i="zoomIn"></button>
+  <button id="search" class="icon" aria-label="Search" title="Search"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
   <button id="print" class="icon" aria-label="Print" title="Print"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V3h10v6"/><path d="M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7" rx="1"/></svg></button>
   <button id="share" class="icon" aria-label="Share" title="Share"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="M8 8l4-4 4 4"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg></button>
+</div>
+<div id="sbar" hidden>
+  <input id="sq" type="text" data-ph="search">
+  <button id="sprev" aria-label="Previous match" title="Previous match"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
+  <button id="snext" aria-label="Next match" title="Next match"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+  <span id="smsg"></span>
+  <button id="sclose" aria-label="Close">&times;</button>
 </div>
 <main id="main">
   <div id="welcome">
@@ -123,6 +140,7 @@ main{flex:1;overflow:auto;padding:12px;text-align:center;position:relative;touch
   </div>
   <div class="pbtns"><button id="pcancel" data-i="cancel"></button><button class="p" id="pgo" data-i="print"></button></div>
 </div></div>
+<button id="hlbtn" hidden><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l6-6 4 4-6 6H9v-4z"/><path d="M3 21h18"/></svg></button>
 <input type="file" id="file" accept="application/pdf" hidden>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
@@ -157,6 +175,8 @@ function applyLang(){
   $("open2").setAttribute("aria-label",t("openAnother")); $("open2").title=t("openAnother");
   $("print").setAttribute("aria-label",t("print")); $("print").title=t("print");
   $("share").setAttribute("aria-label",t("share")); $("share").title=t("share");
+  $("search").setAttribute("aria-label",t("search")); $("search").title=t("search");
+  $("sq").placeholder=t("search");
   if(pdf) tot.textContent = t("pageOf",{n:pdf.numPages});
   try { localStorage.setItem("lang", lang); } catch(e){}
   listRecent();
@@ -166,9 +186,12 @@ Object.keys(LANGS).forEach(function(k){
 });
 langSel.value = lang;
 langSel.onchange = function(){ var l=langSel.value; ensure(l).then(function(){ lang=l; applyLang(); }); };
+try{ var savedTheme=localStorage.getItem("theme"); if(savedTheme) document.documentElement.setAttribute("data-theme",savedTheme); }catch(e){}
 $("theme").onclick = function(){
   var r=document.documentElement, dark = getComputedStyle(r).getPropertyValue("--bg").trim()==="#141a14";
-  r.setAttribute("data-theme", dark?"light":"dark");
+  var next = dark?"light":"dark";
+  r.setAttribute("data-theme", next);
+  try{ localStorage.setItem("theme", next); }catch(e){}
 };
 
 /* ---- Recent files, stored on the phone (IndexedDB) ---- */
@@ -224,7 +247,7 @@ function load(file){
   fr.onload=function(){
     pdfjsLib.getDocument({data:new Uint8Array(fr.result)}).promise.then(function(d){
       if(pdf){ try{pdf.destroy();}catch(e){} }
-      clearPrint(); pdf=d; fileKey=file.name+"|"+file.size; curBlob=file; curName=file.name||"document.pdf";
+      clearPrint(); pdf=d; fileKey=file.name+"|"+file.size; curBlob=file; curName=file.name||"document.pdf"; hlLoad();
       var start=lastPage(fileKey);
       saveRecent(file);
       return d.getPage(1).then(function(p){
@@ -257,6 +280,7 @@ function drawPage(el){
     c.style.width=vp.width+"px"; c.style.height=vp.height+"px";
     el.style.width=vp.width+"px"; el.style.height=vp.height+"px";
     el.appendChild(c);
+    renderHL(el, +el.dataset.n);
     el._rt=p.render({canvasContext:c.getContext("2d"),viewport:vp,transform:dpr!==1?[dpr,0,0,dpr,0,0]:null});
     var tl=document.createElement("div"); tl.className="textLayer"; el.appendChild(tl);
     p.getTextContent().then(function(tc){
@@ -408,6 +432,103 @@ function shareCurrent(){
   }catch(e){ fallbackShare(); }
 }
 $("share").onclick=shareCurrent;
+/* ---- Search inside the open PDF (page by page, lazily) ---- */
+var pageTextCache=[], searchGen=0;
+function pageText(n){
+  if(pageTextCache[n]!=null) return Promise.resolve(pageTextCache[n]);
+  return pdf.getPage(n).then(function(p){ return p.getTextContent(); }).then(function(tc){
+    var txt=tc.items.map(function(i){ return i.str; }).join(" ");
+    pageTextCache[n]=txt; return txt;
+  }).catch(function(){ return ""; });
+}
+function findMatch(term, from, dir, g){
+  term=term.toLowerCase();
+  function step(n, left){
+    if(g!==searchGen) return null;
+    if(left<=0) return null;
+    n+=dir; if(n<1) n=pdf.numPages; if(n>pdf.numPages) n=1;
+    return pageText(n).then(function(txt){
+      if(g!==searchGen) return null;
+      if(txt.toLowerCase().indexOf(term)>=0) return n;
+      return step(n, left-1);
+    });
+  }
+  return step(from, pdf.numPages);
+}
+function openSearch(){
+  if(!pdf) return;
+  $("sbar").classList.add("on"); $("sq").focus(); $("sq").select();
+}
+function closeSearch(){ searchGen++; $("sbar").classList.remove("on"); $("smsg").textContent=""; }
+function doSearch(dir){
+  var term=$("sq").value.trim(); if(!term || !pdf) return;
+  var g=++searchGen;
+  $("smsg").textContent=t("searching");
+  pageText(cur).then(function(txt){
+    if(g!==searchGen) return;
+    if(txt.toLowerCase().indexOf(term.toLowerCase())>=0 && dir===0){ $("smsg").textContent=""; return; }
+    return findMatch(term, cur, dir===0?1:dir, g).then(function(n){
+      if(g!==searchGen) return;
+      if(n==null){ $("smsg").textContent=t("noMatch"); return; }
+      $("smsg").textContent=""; goTo(n);
+    });
+  });
+}
+$("search").onclick=openSearch;
+$("sclose").onclick=closeSearch;
+$("snext").onclick=function(){ doSearch(1); };
+$("sprev").onclick=function(){ doSearch(-1); };
+$("sq").addEventListener("keydown",function(e){ if(e.key==="Enter") doSearch(1); if(e.key==="Escape") closeSearch(); });
+$("sq").addEventListener("input",function(){ pageTextCache=pageTextCache.length?pageTextCache:[]; });
+
+/* ---- Highlighting: stored as page + fraction-of-page rectangles, so it scales with zoom ---- */
+var HL={};
+function hlLoad(){
+  HL={};
+  try{ HL=JSON.parse(localStorage.getItem("hl:"+fileKey)||"{}"); }catch(e){ HL={}; }
+}
+function hlSave(){ try{ localStorage.setItem("hl:"+fileKey, JSON.stringify(HL)); }catch(e){} }
+function renderHL(el, n){
+  var list=HL[n]; if(!list) return;
+  list.forEach(function(r){
+    var d=document.createElement("div"); d.className="hlmark";
+    d.style.left=(r.xf*100)+"%"; d.style.top=(r.yf*100)+"%"; d.style.width=(r.wf*100)+"%"; d.style.height=(r.hf*100)+"%";
+    d.onclick=function(){
+      var idx=HL[n].indexOf(r); if(idx>-1) HL[n].splice(idx,1);
+      if(!HL[n].length) delete HL[n];
+      hlSave(); d.remove();
+    };
+    el.appendChild(d);
+  });
+}
+var hlBtn=$("hlbtn"), hlRange=null, hlPageEl=null;
+function hideHlBtn(){ hlBtn.hidden=true; hlRange=null; hlPageEl=null; }
+document.addEventListener("selectionchange",function(){
+  var sel=window.getSelection();
+  if(!sel || sel.isCollapsed || !sel.rangeCount){ hideHlBtn(); return; }
+  var node=sel.anchorNode, pageEl=node && node.nodeType===1?node.closest(".pg"):(node&&node.parentElement?node.parentElement.closest(".pg"):null);
+  if(!pageEl){ hideHlBtn(); return; }
+  hlRange=sel.getRangeAt(0).cloneRange(); hlPageEl=pageEl;
+  var r=sel.getRangeAt(0).getBoundingClientRect();
+  hlBtn.hidden=false;
+  hlBtn.style.left=Math.max(4,r.left+r.width/2-17)+"px";
+  hlBtn.style.top=Math.max(4,r.top-42+window.scrollY)+"px";
+});
+hlBtn.addEventListener("mousedown",function(e){ e.preventDefault(); }); /* keep selection alive until we read it */
+hlBtn.addEventListener("click",function(){
+  if(!hlRange || !hlPageEl) return;
+  var n=+hlPageEl.dataset.n, pr=hlPageEl.getBoundingClientRect(), rects=hlRange.getClientRects();
+  if(!HL[n]) HL[n]=[];
+  Array.prototype.forEach.call(rects,function(rc){
+    if(rc.width<1||rc.height<1) return;
+    HL[n].push({xf:(rc.left-pr.left)/pr.width, yf:(rc.top-pr.top)/pr.height, wf:rc.width/pr.width, hf:rc.height/pr.height});
+  });
+  hlSave();
+  renderHL(hlPageEl, n);
+  window.getSelection().removeAllRanges();
+  hideHlBtn();
+});
+
 document.addEventListener("keydown",function(e){
   if(!pdf||e.target===pg) return;
   if(e.key==="ArrowRight") goTo(cur+1);
