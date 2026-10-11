@@ -30,6 +30,7 @@ button:disabled{opacity:.4}
 #bar button{flex:none;border:0;border-radius:8px;background:none;color:var(--fg);padding:6px 10px;white-space:nowrap}
 #bar button.icon{min-width:38px;height:38px;display:grid;place-items:center;padding:0}
 #bar button:active{background:var(--ac2);color:#1f2a1f}
+#hlmode.active{background:var(--ac2);color:#1f2a1f}
 .pgbox{flex:none;display:inline-flex;align-items:center;border:1px solid var(--bd);border-radius:8px;background:var(--card);padding:0 8px;min-height:36px;font-size:.8rem;cursor:text}
 .pgbox:focus-within{border-color:var(--ac)}
 #pg{border:0;background:transparent;padding:0;min-height:0;min-width:0;width:2.5ch;text-align:right;-moz-appearance:textfield;appearance:textfield;outline:0}
@@ -105,6 +106,9 @@ main{flex:1;overflow:auto;padding:12px;text-align:center;position:relative;touch
   <button id="next" data-i="next"></button>
   <button id="zo" data-i="zoomOut"></button>
   <button id="zi" data-i="zoomIn"></button>
+  <button id="hlmode" class="icon" aria-label="Highlight" title="Highlight"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l6-6 4 4-6 6H9v-4z"/><path d="M3 21h18"/></svg></button>
+  <button id="hlundo" class="icon" hidden aria-label="Undo" title="Undo"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 0 1 0 8h-1"/></svg></button>
+  <button id="hlredo" class="icon" hidden aria-label="Redo" title="Redo"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14l4-4-4-4"/><path d="M19 10H8a4 4 0 0 0 0 8h1"/></svg></button>
   <button id="search" class="icon" aria-label="Search" title="Search"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
   <button id="print" class="icon" aria-label="Print" title="Print"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V3h10v6"/><path d="M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7" rx="1"/></svg></button>
   <button id="share" class="icon" aria-label="Share" title="Share"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="M8 8l4-4 4 4"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg></button>
@@ -176,6 +180,9 @@ function applyLang(){
   $("print").setAttribute("aria-label",t("print")); $("print").title=t("print");
   $("share").setAttribute("aria-label",t("share")); $("share").title=t("share");
   $("search").setAttribute("aria-label",t("search")); $("search").title=t("search");
+  $("hlmode").setAttribute("aria-label",t("highlight")); $("hlmode").title=t("highlight");
+  $("hlundo").setAttribute("aria-label",t("undo")); $("hlundo").title=t("undo");
+  $("hlredo").setAttribute("aria-label",t("redo")); $("hlredo").title=t("redo");
   $("sq").placeholder=t("search");
   if(pdf) tot.textContent = t("pageOf",{n:pdf.numPages});
   try { localStorage.setItem("lang", lang); } catch(e){}
@@ -486,28 +493,68 @@ $("sq").addEventListener("keydown",function(e){ if(e.key==="Enter"||e.key==="Arr
 $("sq").addEventListener("input",function(){ pageTextCache=pageTextCache.length?pageTextCache:[]; });
 
 /* ---- Highlighting: stored as page + fraction-of-page rectangles, so it scales with zoom ---- */
-var HL={};
+var HL={}, hlModeOn=false, hlUndo=[], hlRedo=[];
 function hlLoad(){
-  HL={};
+  HL={}; hlUndo=[]; hlRedo=[];
   try{ HL=JSON.parse(localStorage.getItem("hl:"+fileKey)||"{}"); }catch(e){ HL={}; }
+  updateUndoRedoBtns();
 }
 function hlSave(){ try{ localStorage.setItem("hl:"+fileKey, JSON.stringify(HL)); }catch(e){} }
+function refreshPageHL(n){
+  var el=pageEls[n-1]; if(!el || !el._on) return;
+  var marks=el.querySelectorAll(".hlmark"); marks.forEach(function(m){ m.remove(); });
+  renderHL(el, n);
+}
 function renderHL(el, n){
   var list=HL[n]; if(!list) return;
   list.forEach(function(r){
     var d=document.createElement("div"); d.className="hlmark";
     d.style.left=(r.xf*100)+"%"; d.style.top=(r.yf*100)+"%"; d.style.width=(r.wf*100)+"%"; d.style.height=(r.hf*100)+"%";
-    d.onclick=function(){
-      var idx=HL[n].indexOf(r); if(idx>-1) HL[n].splice(idx,1);
-      if(!HL[n].length) delete HL[n];
-      hlSave(); d.remove();
-    };
+    d.onclick=function(){ removeHighlight(n, r); };
     el.appendChild(d);
   });
 }
+/* internal mutators: change HL + persist + redraw, with no effect on the undo/redo stacks */
+function _addRects(n, rects){ if(!HL[n]) HL[n]=[]; rects.forEach(function(r){ HL[n].push(r); }); hlSave(); refreshPageHL(n); }
+function _removeRects(n, rects){
+  rects.forEach(function(r){ var idx=HL[n]?HL[n].indexOf(r):-1; if(idx>-1) HL[n].splice(idx,1); });
+  if(HL[n] && !HL[n].length) delete HL[n];
+  hlSave(); refreshPageHL(n);
+}
+function updateUndoRedoBtns(){
+  $("hlundo").disabled=!hlUndo.length; $("hlredo").disabled=!hlRedo.length;
+}
+function addHighlight(n, rects){
+  if(!rects.length) return;
+  _addRects(n, rects);
+  hlUndo.push({type:"add", page:n, rects:rects}); hlRedo=[]; updateUndoRedoBtns();
+}
+function removeHighlight(n, r){
+  _removeRects(n, [r]);
+  hlUndo.push({type:"remove", page:n, rects:[r]}); hlRedo=[]; updateUndoRedoBtns();
+}
+function hlUndoOnce(){
+  var a=hlUndo.pop(); if(!a) return;
+  if(a.type==="add") _removeRects(a.page, a.rects); else _addRects(a.page, a.rects);
+  hlRedo.push(a); updateUndoRedoBtns();
+}
+function hlRedoOnce(){
+  var a=hlRedo.pop(); if(!a) return;
+  if(a.type==="add") _addRects(a.page, a.rects); else _removeRects(a.page, a.rects);
+  hlUndo.push(a); updateUndoRedoBtns();
+}
+$("hlundo").onclick=hlUndoOnce; $("hlredo").onclick=hlRedoOnce;
+$("hlmode").onclick=function(){
+  hlModeOn=!hlModeOn;
+  $("hlmode").classList.toggle("active", hlModeOn);
+  $("hlundo").hidden=!hlModeOn; $("hlredo").hidden=!hlModeOn;
+  if(!hlModeOn) hideHlBtn();
+};
+
 var hlBtn=$("hlbtn"), hlRange=null, hlPageEl=null;
 function hideHlBtn(){ hlBtn.hidden=true; hlRange=null; hlPageEl=null; }
 document.addEventListener("selectionchange",function(){
+  if(!hlModeOn){ hideHlBtn(); return; }
   var sel=window.getSelection();
   if(!sel || sel.isCollapsed || !sel.rangeCount){ hideHlBtn(); return; }
   var node=sel.anchorNode, pageEl=node && node.nodeType===1?node.closest(".pg"):(node&&node.parentElement?node.parentElement.closest(".pg"):null);
@@ -521,14 +568,12 @@ document.addEventListener("selectionchange",function(){
 hlBtn.addEventListener("mousedown",function(e){ e.preventDefault(); }); /* keep selection alive until we read it */
 hlBtn.addEventListener("click",function(){
   if(!hlRange || !hlPageEl) return;
-  var n=+hlPageEl.dataset.n, pr=hlPageEl.getBoundingClientRect(), rects=hlRange.getClientRects();
-  if(!HL[n]) HL[n]=[];
+  var n=+hlPageEl.dataset.n, pr=hlPageEl.getBoundingClientRect(), rects=hlRange.getClientRects(), add=[];
   Array.prototype.forEach.call(rects,function(rc){
     if(rc.width<1||rc.height<1) return;
-    HL[n].push({xf:(rc.left-pr.left)/pr.width, yf:(rc.top-pr.top)/pr.height, wf:rc.width/pr.width, hf:rc.height/pr.height});
+    add.push({xf:(rc.left-pr.left)/pr.width, yf:(rc.top-pr.top)/pr.height, wf:rc.width/pr.width, hf:rc.height/pr.height});
   });
-  hlSave();
-  renderHL(hlPageEl, n);
+  addHighlight(n, add);
   window.getSelection().removeAllRanges();
   hideHlBtn();
 });
