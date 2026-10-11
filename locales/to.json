@@ -2,12 +2,12 @@
   "appName": "AfroPDF",
   "language": "Mwaambo",
   "theme": "Kumunika / Mudima",
-  "welcome": "Mwatambulwa",
-  "tagline": "Amubale ma-PDF anu mahala.",
-  "open": "Jalula i-PDF",
+  "welcome": "Mwaiya kabotu",
+  "tagline": "Bala ma-PDF aako mahala.",
+  "open": "Jula PDF",
   "openAnother": "Jalula imwi",
-  "dropHint": "Naa mubike faela lya PDF aano.",
-  "privacy": "Faela lyanu lilakkala mufoni yanu. Talitumwi ku Internet.",
+  "dropHint": "Naa waisye faili ya PDF akuno.",
+  "privacy": "Faili yako ilakkala aafoni yako. Taipedwi kuintaneti.",
   "prev": "Amujoke musule",
   "next": "Amuye kumbele",
   "zoomIn": "Amupange kupati",
@@ -19,7 +19,7 @@
   "recent": "Zyakajalulwa cimpanga",
   "remove": "Amugusye",
   "page": "Peji",
-  "credit": "AfroPDF yakabambwa a Last Dulani",
+  "credit": "AfroPDF yakapangwa a Last Dulani",
   "print": "Prinita",
   "printFrom": "Kuzwa apeji",
   "printTo": "Kusika apeji",
@@ -29,5 +29,5 @@
   "printFail": "Tetwakonzya kuprinita.",
   "share": "Abane",
   "shareUnsupported": "Kwaabana takulibonwi aano. Faela lyabikkwa muchibeela caco.",
-  "developedBy": "Yakabambwa a Last Dulani"
+  "developedBy": "Yakapangwa a Last Dulani"
 }
