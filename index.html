@@ -42,7 +42,7 @@ main{flex:1;overflow:auto;padding:12px;text-align:center;position:relative;touch
 #pages{position:relative;width:max-content;min-width:100%}
 .pg{position:relative;margin:0 auto 10px;background:#fff;box-shadow:0 2px 10px #0003}
 .pg canvas{display:block}
-.textLayer{position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;line-height:1;-webkit-user-select:text;user-select:text}
+.textLayer{position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;line-height:1;-webkit-user-select:text;user-select:text;z-index:1}
 .textLayer span,.textLayer br{color:transparent;position:absolute;white-space:pre;cursor:text;transform-origin:0% 0%}
 .textLayer ::selection{background:rgba(30,122,60,.35);color:transparent}
 #recent{margin-top:18px;text-align:left}
@@ -85,7 +85,7 @@ main{flex:1;overflow:auto;padding:12px;text-align:center;position:relative;touch
 #sbar button:active{background:var(--ac2);color:#1f2a1f}
 #sclose{font-size:20px}
 #smsg{font-size:.75rem;opacity:.75;white-space:nowrap}
-.hlmark{position:absolute;background:rgba(242,183,5,.45);pointer-events:auto;cursor:pointer;border-radius:2px}
+.hlmark{position:absolute;background:rgba(242,183,5,.45);pointer-events:auto;cursor:pointer;border-radius:2px;z-index:2}
 #hlbtn{position:fixed;z-index:25;border:0;border-radius:8px;background:var(--fg);color:var(--bg);width:34px;height:34px;display:grid;place-items:center;box-shadow:0 2px 8px #0004}
 .err{color:#c0392b}
 </style>
@@ -236,7 +236,7 @@ $("file").onchange = function(e){ if(e.target.files[0]) load(e.target.files[0]);
 ["dragover","dragenter"].forEach(function(ev){ document.body.addEventListener(ev,function(e){e.preventDefault(); w.classList.add("over");}); });
 ["dragleave","drop"].forEach(function(ev){ document.body.addEventListener(ev,function(e){e.preventDefault(); w.classList.remove("over");}); });
 document.body.addEventListener("drop", function(e){ var f=e.dataTransfer.files[0]; if(f) load(f); });
-function showWelcome(){ w.style.display=""; $("bar").style.display="none"; pagesEl.hidden=true; msg.textContent=""; curBlob=null; curName=""; listRecent(); }
+function showWelcome(){ w.style.display=""; $("bar").style.display="none"; pagesEl.hidden=true; msg.textContent=""; curBlob=null; curName=""; hideHlBtn(); closeSearch(); listRecent(); }
 $("lg").onclick=showWelcome; $("title").onclick=showWelcome;
 
 function fail(k){ msg.className="err"; msg.textContent=t(k); }
@@ -319,6 +319,7 @@ function setCur(n){
 }
 var tick=false;
 main.addEventListener("scroll",function(){
+  hideHlBtn();
   if(tick||!pdf||!pageEls.length) return; tick=true;
   requestAnimationFrame(function(){
     tick=false;
