@@ -1,6 +1,6 @@
 # AfroPDF
 
-Free PDF reader with a Shona interface. Works offline after the first visit.
+Free PDF reader for African readers. Works offline after the first visit.
 
 Developed by Last Dulani.
 
