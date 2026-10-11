@@ -32,5 +32,8 @@
   "developedBy": "Idapangidwa ndi Last Dulani",
   "search": "Sakani",
   "searching": "Kusaka...",
-  "noMatch": "Palibe zomwe zapezeka."
+  "noMatch": "Palibe zomwe zapezeka.",
+  "highlight": "Wunikirani",
+  "undo": "Bwerera m'mbuyo",
+  "redo": "Chitaninso"
 }

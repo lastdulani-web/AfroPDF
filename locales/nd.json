@@ -32,5 +32,8 @@
   "developedBy": "Yenziwe ngu Last Dulani",
   "search": "Dinga",
   "searching": "Kudinga...",
-  "noMatch": "Akutholakalanga lutho."
+  "noMatch": "Akutholakalanga lutho.",
+  "highlight": "Gqamisa",
+  "undo": "Buyisela emuva",
+  "redo": "Yenza futhi"
 }

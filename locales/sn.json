@@ -32,5 +32,8 @@
   "developedBy": "Yakagadzirwa na Last Dulani",
   "search": "Tsvaga",
   "searching": "Kutsvaga...",
-  "noMatch": "Hapana chawanikwa."
+  "noMatch": "Hapana chawanikwa.",
+  "highlight": "Gadza mavara",
+  "undo": "Dzosera shure",
+  "redo": "Itazve"
 }

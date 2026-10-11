@@ -32,5 +32,8 @@
   "developedBy": "Developed by Last Dulani",
   "search": "Search",
   "searching": "Searching...",
-  "noMatch": "No matches found."
+  "noMatch": "No matches found.",
+  "highlight": "Highlight",
+  "undo": "Undo",
+  "redo": "Redo"
 }

@@ -32,5 +32,8 @@
   "developedBy": "Yakapangwa a Last Dulani",
   "search": "Lyangula",
   "searching": "Kulilangula...",
-  "noMatch": "Taakwe cakajanika."
+  "noMatch": "Taakwe cakajanika.",
+  "highlight": "Pulula",
+  "undo": "Pilusya kunyuma",
+  "redo": "Chita alimwi"
 }
