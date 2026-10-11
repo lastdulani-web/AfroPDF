@@ -109,7 +109,7 @@ main{flex:1;overflow:auto;padding:12px;text-align:center;position:relative;touch
   <button id="print" class="icon" aria-label="Print" title="Print"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V3h10v6"/><path d="M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7" rx="1"/></svg></button>
   <button id="share" class="icon" aria-label="Share" title="Share"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="M8 8l4-4 4 4"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg></button>
 </div>
-<div id="sbar" hidden>
+<div id="sbar">
   <input id="sq" type="text" data-ph="search">
   <button id="sprev" aria-label="Previous match" title="Previous match"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
   <button id="snext" aria-label="Next match" title="Next match"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
@@ -247,7 +247,7 @@ function load(file){
   fr.onload=function(){
     pdfjsLib.getDocument({data:new Uint8Array(fr.result)}).promise.then(function(d){
       if(pdf){ try{pdf.destroy();}catch(e){} }
-      clearPrint(); pdf=d; fileKey=file.name+"|"+file.size; curBlob=file; curName=file.name||"document.pdf"; hlLoad();
+      clearPrint(); pdf=d; fileKey=file.name+"|"+file.size; curBlob=file; curName=file.name||"document.pdf"; hlLoad(); pageTextCache=[]; searchGen++;
       var start=lastPage(fileKey);
       saveRecent(file);
       return d.getPage(1).then(function(p){
@@ -280,9 +280,9 @@ function drawPage(el){
     c.style.width=vp.width+"px"; c.style.height=vp.height+"px";
     el.style.width=vp.width+"px"; el.style.height=vp.height+"px";
     el.appendChild(c);
-    renderHL(el, +el.dataset.n);
     el._rt=p.render({canvasContext:c.getContext("2d"),viewport:vp,transform:dpr!==1?[dpr,0,0,dpr,0,0]:null});
     var tl=document.createElement("div"); tl.className="textLayer"; el.appendChild(tl);
+    renderHL(el, +el.dataset.n);
     p.getTextContent().then(function(tc){
       if(!el._on || g!==gen) return;
       el._tl=pdfjsLib.renderTextLayer({textContent:tc,container:tl,viewport:vp,textDivs:[]});
@@ -472,13 +472,16 @@ function doSearch(dir){
       if(n==null){ $("smsg").textContent=t("noMatch"); return; }
       $("smsg").textContent=""; goTo(n);
     });
+  }).catch(function(){
+    if(g!==searchGen) return;
+    $("smsg").textContent=t("noMatch");
   });
 }
 $("search").onclick=openSearch;
 $("sclose").onclick=closeSearch;
 $("snext").onclick=function(){ doSearch(1); };
 $("sprev").onclick=function(){ doSearch(-1); };
-$("sq").addEventListener("keydown",function(e){ if(e.key==="Enter") doSearch(1); if(e.key==="Escape") closeSearch(); });
+$("sq").addEventListener("keydown",function(e){ if(e.key==="Enter"||e.key==="ArrowDown") doSearch(1); if(e.key==="ArrowUp") doSearch(-1); if(e.key==="Escape") closeSearch(); });
 $("sq").addEventListener("input",function(){ pageTextCache=pageTextCache.length?pageTextCache:[]; });
 
 /* ---- Highlighting: stored as page + fraction-of-page rectangles, so it scales with zoom ---- */
@@ -530,7 +533,7 @@ hlBtn.addEventListener("click",function(){
 });
 
 document.addEventListener("keydown",function(e){
-  if(!pdf||e.target===pg) return;
+  if(!pdf||e.target===pg||e.target===$("sq")) return;
   if(e.key==="ArrowRight") goTo(cur+1);
   if(e.key==="ArrowLeft") goTo(cur-1);
 });
