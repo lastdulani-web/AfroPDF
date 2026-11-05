@@ -35,5 +35,6 @@
   "noMatch": "No matches found.",
   "highlight": "Highlight",
   "undo": "Undo",
-  "redo": "Redo"
+  "redo": "Redo",
+  "splashTag": "Built for Reading."
 }
