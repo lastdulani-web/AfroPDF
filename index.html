@@ -22,14 +22,17 @@
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column}
-header{background:var(--ac);color:#fff;display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;border-bottom:3px solid var(--ac2)}
-h1{font-size:1.45rem;font-weight:800;line-height:1;letter-spacing:-.4px;margin:0;flex:1;min-width:0;cursor:pointer;white-space:nowrap}
-.lg{flex:none;cursor:pointer;display:block;object-fit:contain;filter:drop-shadow(0 1px 3px rgba(0,0,0,.3))}
+header{background:var(--ac);color:#fff;display:flex;align-items:center;gap:10px;padding:calc(14px + env(safe-area-inset-top,0px)) 14px 14px;border-bottom:4px solid var(--ac2)}
+h1{font-size:1.2rem;font-weight:400;line-height:1;letter-spacing:.16em;text-transform:uppercase;margin:0;flex:1;min-width:0;cursor:pointer;white-space:nowrap}
+h1 .a{color:#fff}h1 .p{color:var(--ac2)}
+.lg{flex:none;cursor:pointer;display:block;width:42px;height:42px;object-fit:cover;border-radius:12px;border:1.5px solid rgba(255,255,255,.55);box-shadow:0 2px 8px rgba(0,0,0,.25)}
 header select,header button{background:none;border:1px solid #ffffff66;color:#fff}
 header select{-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.14);color:#fff;padding:5px 24px 5px 10px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='white' d='M7 10l5 5 5-5z'/></svg>");background-repeat:no-repeat;background-position:right 6px center;background-size:15px}
 header select option{color:#1f2a1f;background:#fff}
-#theme{width:40px;height:36px;display:grid;place-items:center;padding:0;border-radius:8px}
-#theme svg{width:18px;height:18px;display:block}
+header select{height:44px;padding-top:0;padding-bottom:0;border-radius:13px;border-width:1.5px;font-size:.85rem}
+#theme{width:44px;height:44px;display:grid;place-items:center;padding:0;border-radius:13px;border:1.5px solid rgba(255,255,255,.5);background:rgba(255,255,255,.06)}
+#theme svg{width:22px;height:22px;display:block}
+@media (max-width:390px){header{gap:8px;padding-left:10px;padding-right:10px}h1{font-size:1.02rem;letter-spacing:.11em}.lg{width:38px;height:38px}header select{height:40px;padding-left:8px;padding-right:20px;background-position:right 4px center}#theme{width:40px;height:40px}#theme svg{width:20px;height:20px}}
 #theme:focus-visible{outline:2px solid var(--ac2);outline-offset:1px}
 button,select,input{font:inherit;font-size:.8rem;color:var(--fg);background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:5px 8px;min-height:36px}
 button.p{background:var(--ac);color:#fff;border-color:var(--ac);font-weight:600;font-size:.9rem}
@@ -80,10 +83,10 @@ main{flex:1;overflow:auto;padding:12px;text-align:center;position:relative;touch
 #splash .sp-logo{position:relative;width:124px;height:124px;animation-delay:.05s}
 #splash .sp-logo::before{content:"";position:absolute;inset:-78px;border-radius:50%;background:radial-gradient(circle,rgba(6,71,51,.11) 0%,rgba(6,71,51,0) 66%);pointer-events:none}
 #splash .sp-logo img{position:relative;width:124px;height:124px;display:block;border-radius:28px;box-shadow:0 18px 42px rgba(6,71,51,.32)}
-#splash .sp-name{margin-top:30px;font-size:2.5rem;font-weight:800;line-height:1;letter-spacing:-.6px;color:#064733;animation-delay:.2s}
-#splash .sp-name b{color:#f2b705;font-weight:800}
-#splash .sp-tag{margin-top:16px;font-size:1.1rem;letter-spacing:.04em;color:#2b3a33;animation-delay:.35s}
-#splash .sp-dev{margin-top:40px;font-size:.88rem;color:#6d7a72;animation-delay:.5s}
+#splash .sp-name{margin-top:30px;font-size:2.3rem;font-weight:300;line-height:1;letter-spacing:.26em;padding-left:.26em;text-transform:uppercase;color:#064733;animation-delay:.2s}
+#splash .sp-vals{position:absolute;left:0;right:0;bottom:calc(11vh + env(safe-area-inset-bottom,0px));padding:0 12px;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:#6d7a72;animation-delay:.65s}
+#splash .sp-tag{margin-top:20px;font-size:1.2rem;line-height:1.45;color:#2b3a33;white-space:pre-line;animation-delay:.35s}
+#splash .sp-dev{margin-top:34px;font-size:.95rem;color:#6d7a72;animation-delay:.5s}
 @keyframes spIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){#splash>*{animation:none;opacity:1}}
 #splash.hide{opacity:0;pointer-events:none}
@@ -107,10 +110,10 @@ main{flex:1;overflow:auto;padding:12px;text-align:center;position:relative;touch
 </style>
 </head>
 <body>
-<div id="splash"><div class="sp-logo"><img src="icons/logo.png" alt="AfroPDF"></div><div class="sp-name">Afro<b>PDF</b></div><div class="sp-tag" data-i="splashTag"></div><div class="sp-dev" data-i="developedBy"></div></div>
+<div id="splash"><div class="sp-logo"><img src="icons/logo.png" alt="AfroPDF"></div><div class="sp-name">AfroPDF</div><div class="sp-tag" data-i="splashTag"></div><div class="sp-dev" data-i="developedBy"></div><div class="sp-vals" data-i="splashValues"></div></div>
 <header>
-  <img class="lg" id="lg" src="icons/glyph.png" width="35" height="40" alt="AfroPDF">
-  <h1 id="title"><span style="color:#fff">Afro</span><span style="color:var(--ac2)">PDF</span></h1>
+  <img class="lg" id="lg" src="icons/logo.png" width="42" height="42" alt="AfroPDF">
+  <h1 id="title"><span class="a">Afro</span><span class="p">PDF</span></h1>
   <select id="lang" aria-label="Language"></select>
   <button id="theme" aria-label="Light / Dark" title="Light / Dark"></button>
 </header>
